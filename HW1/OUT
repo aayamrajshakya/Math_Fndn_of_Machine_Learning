@@ -1,0 +1,19 @@
+DATA: N, d, nclass = 150 4 3
+MyCLF() = DecisionTreeClassifier(max_depth=5)
+iris.csv: MyCLF()      : Acc.(mean,std) = (94.53,3.12)%; E-time= 0.00074
+====== Comparision: Scikit-learn Classifiers =================
+iris.csv: Logistic-Regr: Acc.(mean,std) = (96.13,2.62)%; E-time= 0.01035
+iris.csv: KNeighbors-5 : Acc.(mean,std) = (96.49,1.99)%; E-time= 0.00176
+iris.csv: SVC-Linear   : Acc.(mean,std) = (97.60,2.26)%; E-time= 0.00085
+iris.csv: SVC-RBF      : Acc.(mean,std) = (96.62,2.10)%; E-time= 0.00101
+iris.csv: Random-Forest: Acc.(mean,std) = (94.84,3.16)%; E-time= 0.03647
+iris.csv: MLPClassifier: Acc.(mean,std) = (98.58,1.32)%; E-time= 0.20549
+iris.csv: AdaBoost     : Acc.(mean,std) = (94.40,2.64)%; E-time= 0.04119
+iris.csv: Naive-Bayes  : Acc.(mean,std) = (95.11,3.20)%; E-time= 0.00090
+iris.csv: QDA          : Acc.(mean,std) = (97.64,2.06)%; E-time= 0.00085
+iris.csv: Gaussian-Proc: Acc.(mean,std) = (95.64,2.63)%; E-time= 0.16151
+--------------------------------------------------------------
+sklearn classifiers Acc: (mean,max) = (96.31,98.58)%; Best = MLPClassifier
+====== Ensembling: SKlearn Classifiers =======================
+EnCLF = ['KNeighbors-5', 'SVC-Linear', 'SVC-RBF', 'MLPClassifier', 'QDA']
+iris.csv: Ensemble CLFs: Acc.(mean,std) = (97.60,1.98)%; E-time= 0.22272
