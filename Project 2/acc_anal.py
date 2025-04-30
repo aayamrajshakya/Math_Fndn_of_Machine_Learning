@@ -32,7 +32,7 @@ def angle_table(CC):
     return np.arccos(cosine)*(180/np.pi)
 
 def class_stat(X,y,d0,datafile):
-    print('[1;37mclass_stat:[m')
+    print('[1;37mclass_stat:[m')
     CC = class_center(X,y)
     c,d = CC.shape
 

@@ -39,7 +39,7 @@ def dataCellipses(X,y,savename):
            plt.scatter(Xc[:,0],Xc[:,1],s=15,c=COLOR[c],marker=MARKER[c])
            angle = VT2angle(VT);
            eta = np.sqrt(max(AD2))*2
-           ELL.append(Ellipse(CC, s[0]*eta, s[1]*eta, angle ) )
+           ELL.append(Ellipse(CC, s[0]*eta, s[1]*eta, angle=angle ) )
 
     if d==2:  #for figures
         for c, e in enumerate(ELL):
@@ -66,7 +66,6 @@ def data_denoise(X,y,portion=0.9):
         if c==0:
             Xout = Xcs[:npick]; yout = y1[:npick];
         else:
-            Xout = np.row_stack((Xout,Xcs[:npick]))
-            yout = np.row_stack((yout,y1[:npick]))
+            Xout = np.concatenate((Xout,Xcs[:npick]))
+            yout = np.concatenate((yout,y1[:npick]))
     return Xout, yout.reshape(len(Xout))
-

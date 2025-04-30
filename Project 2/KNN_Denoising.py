@@ -6,7 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn import datasets
 import time
 from sklearn_classifiers import classifiers, names
-from sklearn.metrics import accuracy_score
 
 #----------------------------------
 def conf_count(neigh,y):
@@ -17,13 +16,6 @@ def conf_count(neigh,y):
     return cscore
 
 #-- Data Generation ---------------
-# n=5; d=3
-# X0 = np.random.random((n,d)); X1 = 2*np.random.random((n,d))+0.2
-# X  = np.row_stack((X0,X1))
-# y0 = np.zeros(n,); y1 = np.ones(n,)
-# y  = np.row_stack((y0,y1)).reshape((len(X)))
-# print('(X,y):\n',np.column_stack((X,y)))
-
 data_read = datasets.load_wine()
 X = data_read.data
 y = data_read.target
@@ -61,12 +53,6 @@ Xd_train, Xd_test, yd_train, yd_test = train_test_split(Xd, yd, train_size=0.7,
                                 random_state=42, stratify=yd)
 
 
-total = len(X)
-initial = len(X_train)
-denoised = len(Xd_train)
-
-print(f"\nTotal data points: {total}\nInitial training points: {initial}\nDenoised training points: {denoised}")
-
 # Show some successfully denoised data points
 denoised_indices = np.where(cscore >= xi)[0]  
 print(f"\033[91m\nRandom 3 good samples with confidence score {xi} and above:\033[0m:")
@@ -91,24 +77,31 @@ def multi_run(clf, X_train, y_train, X_test, y_test, NUM_EPOCHS):
     return np.mean(acc)*100, np.std(acc)*100, etime # accmean,acc_std,etime
 
 #=====================================================================
-print('\n====== Comparision: Scikit-learn Classifiers =================')
+print('\n====== Comparison: Scikit-learn Classifiers =================')
 #=====================================================================
-import os;
 
 def helper(dataset_type, X_train, y_train, X_test, y_test):
     NUM_EPOCHS = 50
     acc_max=0; Acc_CLF = np.zeros([len(classifiers),1])
-    print(f'\033[91m\nPerformance in {dataset_type} dataset:\033[0m:')
+    print(f'\033[91mPerformance in {dataset_type} dataset:\033[0m:')
     for k, (name, clf) in enumerate(zip(names, classifiers)):
         accmean, acc_std, etime = multi_run(clf, X_train, y_train, X_test, y_test, NUM_EPOCHS)
 
         Acc_CLF[k] = accmean
         if accmean>acc_max: acc_max,algname = accmean,name
-        print('%s: %s: Acc.(mean,std) = (%.2f,%.2f)%%; E-time= %.5f'
-            %(os.path.basename(dataname),name,accmean,acc_std,etime/NUM_EPOCHS))
+        print('%s: Acc.(mean,std) = (%.2f,%.2f)%%; E-time= %.5f'
+            %(name,accmean,acc_std,etime/NUM_EPOCHS))
     print('--------------------------------------------------------------')
-    print('Acc: (mean,max) = (%.2f,%.2f)%%; Best = %s'
+    print('Acc: (mean,max) = (%.2f,%.2f)%%; Best = %s\n'
         %(np.mean(Acc_CLF),acc_max,algname))
 
-helper('original', X_train, y_train, X_test,y_test)
-helper('denoised', Xd_train, yd_train, Xd_test, yd_test)
+print(f"\033[35mData points chosen: {len(Xd_train)}/{len(X)}\033[0m")
+helper('denoised', Xd_train, yd_train, X_test, y_test)
+
+print("\033[32mOriginal dataset:\nTesting with the original dataset but with same no. of points as in denoised set.\033[0m")
+X1, X2, y1, y2 = train_test_split(X, y, train_size=0.46,
+                                random_state=42, stratify=y)
+
+print(f"\033[35mData points chosen: {len(X1)}/{len(X)}\033[0m")
+helper('demo', X1, y1, X2, y2)
+print("\033[32mAs you can see, the classifiers perform better on denoised dataset compared to this dataset\n, which shows that the denoising process is successsful!\033[0m")

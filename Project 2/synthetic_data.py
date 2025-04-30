@@ -40,4 +40,3 @@ def synthetic_data():
 
 if __name__ == '__main__':
     synthetic_data()
-
